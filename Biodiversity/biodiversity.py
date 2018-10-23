@@ -216,15 +216,9 @@ category_pivot.head()
 category_pivot.columns = ['category', 'not_protected', 'protected']
 
 
-# In[18]:
-
-
-category_pivot
-
-
 # Let's create a new column of `category_pivot` called `percent_protected`, which is equal to `protected` (the number of species that are protected) divided by `protected` plus `not_protected` (the total number of species).
 
-# In[19]:
+# In[18]:
 
 
 ratio_protected = lambda row:     row.protected / (row.protected + row.not_protected) 
@@ -233,7 +227,7 @@ category_pivot['percent_protected'] = category_pivot.apply(ratio_protected, axis
 
 # Examine `category_pivot`.
 
-# In[20]:
+# In[19]:
 
 
 category_pivot
@@ -252,13 +246,11 @@ category_pivot
 # 
 # Create a table called `contingency` and fill it in with the correct numbers
 
-# In[21]:
+# In[20]:
 
 
 contingency = category_pivot[(category_pivot.category == "Mammal") | (category_pivot.category == "Bird")]
 contingency = contingency[['not_protected', 'protected']]
-
-contingency
 
 
 # In order to perform our chi square test, we'll need to import the correct function from scipy.  Past the following code and run it:
@@ -266,7 +258,7 @@ contingency
 # from scipy.stats import chi2_contingency
 # ```
 
-# In[22]:
+# In[21]:
 
 
 from scipy.stats import chi2_contingency
@@ -274,7 +266,7 @@ from scipy.stats import chi2_contingency
 
 # Now run `chi2_contingency` with `contingency`.
 
-# In[23]:
+# In[22]:
 
 
 chi2_contingency(contingency)
@@ -284,13 +276,12 @@ chi2_contingency(contingency)
 # 
 # Let's test another.  Is the difference between `Reptile` and `Mammal` significant?
 
-# In[24]:
+# In[38]:
 
 
-contingency_rept_mamm = category_pivot[(category_pivot.category == "Mammal") | (category_pivot.category == "Bird")]
+contingency_rept_mamm = category_pivot[(category_pivot.category == "Mammal") | (category_pivot.category == "Reptile")]
 contingency_rept_mamm = contingency_rept_mamm[['not_protected', 'protected']]
 
-contingency_rept_mamm
 chi2_contingency(contingency_rept_mamm)
 
 
@@ -300,7 +291,7 @@ chi2_contingency(contingency_rept_mamm)
 
 # Conservationists have been recording sightings of different species at several national parks for the past 7 days.  They've saved sent you their observations in a file called `observations.csv`.  Load `observations.csv` into a variable called `observations`, then use `head` to view the data.
 
-# In[25]:
+# In[24]:
 
 
 observations = pd.read_csv('observations.csv')
@@ -309,7 +300,7 @@ observations.head()
 
 # Some scientists are studying the number of sheep sightings at different national parks.  There are several different scientific names for different types of sheep.  We'd like to know which rows of `species` are referring to sheep.  Notice that the following code will tell us whether or not a word occurs in a string:
 
-# In[26]:
+# In[25]:
 
 
 # Does "Sheep" occur in this string?
@@ -317,7 +308,7 @@ str1 = 'This string contains Sheep'
 'Sheep' in str1
 
 
-# In[27]:
+# In[26]:
 
 
 # Does "Sheep" occur in this string?
@@ -327,7 +318,7 @@ str2 = 'This string contains Cows'
 
 # Use `apply` and a `lambda` function to create a new column in `species` called `is_sheep` which is `True` if the `common_names` contains `'Sheep'`, and `False` otherwise.
 
-# In[28]:
+# In[27]:
 
 
 species['is_sheep'] = species.common_names.apply(lambda name:'Sheep' in name)
@@ -336,13 +327,13 @@ species.head()
 
 # Select the rows of `species` where `is_sheep` is `True` and examine the results.
 
-# In[29]:
+# In[28]:
 
 
 species.head()
 
 
-# In[30]:
+# In[29]:
 
 
 species[species.is_sheep]
@@ -350,7 +341,7 @@ species[species.is_sheep]
 
 # Many of the results are actually plants.  Select the rows of `species` where `is_sheep` is `True` and `category` is `Mammal`.  Save the results to the variable `sheep_species`.
 
-# In[31]:
+# In[30]:
 
 
 sheep_species = species[(species.is_sheep) & (species.category == "Mammal")]
@@ -359,7 +350,7 @@ sheep_species
 
 # Now merge `sheep_species` with `observations` to get a DataFrame with observations of sheep.  Save this DataFrame as `sheep_observations`.
 
-# In[32]:
+# In[31]:
 
 
 sheep_observations =observations.merge(sheep_species)
@@ -370,7 +361,7 @@ sheep_observations
 # 
 # This is the total number of sheep observed in each park over the past 7 days.
 
-# In[33]:
+# In[32]:
 
 
 obs_by_park = sheep_observations.groupby('park_name').observations.sum().reset_index()
@@ -388,7 +379,7 @@ obs_by_park
 # 6. Title the graph `Observations of Sheep per Week`
 # 7. Plot the grap using `plt.show()`
 
-# In[34]:
+# In[33]:
 
 
 plt.figure(figsize=(16, 4))
@@ -413,7 +404,7 @@ plt.show()
 # 
 # Remember that "Minimum Detectable Effect" is a percent of the baseline.
 
-# In[35]:
+# In[34]:
 
 
 minimum_detectable_effect = 5 / 0.15
@@ -422,20 +413,20 @@ minimum_detectable_effect #33.3334
 
 # How many weeks would you need to observe sheep at Bryce National Park in order to observe enough sheep?  How many weeks would you need to observe at Yellowstone National Park to observe enough sheep?
 
-# In[36]:
+# In[35]:
 
 
 bryce = 870.0 / 250
 yellowstone = 810.0 / 507
 
 
-# In[37]:
+# In[36]:
 
 
 bryce # About 3 weeks and 4 days
 
 
-# In[38]:
+# In[37]:
 
 
 yellowstone # A week and 5 days
