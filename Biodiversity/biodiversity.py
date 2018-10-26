@@ -160,8 +160,7 @@ plt.show()
 # In[12]:
 
 
-is_protected_lambda = lambda x: 'False'     if x == "No Intervention"     else "True"
-species['is_protected'] = species.conservation_status.apply(is_protected_lambda)
+species['is_protected'] = species.conservation_status != 'No Intervention'
 
 
 # Let's group by *both* `category` and `is_protected`.  Save your results to `category_counts`.
@@ -276,7 +275,7 @@ chi2_contingency(contingency)
 # 
 # Let's test another.  Is the difference between `Reptile` and `Mammal` significant?
 
-# In[38]:
+# In[23]:
 
 
 contingency_rept_mamm = category_pivot[(category_pivot.category == "Mammal") | (category_pivot.category == "Reptile")]
